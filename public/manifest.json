@@ -1,0 +1,19 @@
+{
+  "name": "Rabbit — NEET Self-Study Companion",
+  "short_name": "Rabbit NEET",
+  "description": "Honest, distraction-free NEET preparation companion with real question solving, spaced repetition, and verified progress tracking.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F8FAFC",
+  "theme_color": "#065F46",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "productivity", "study"]
+}

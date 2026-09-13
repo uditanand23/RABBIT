@@ -310,7 +310,10 @@ export const StudyPlannerPage: React.FC = () => {
                         style={{ fontSize: '0.78rem', padding: '6px 10px', width: 'auto' }}
                       >
                         <option value="not_started">Not Started</option>
-                        <option value="in_progress">In Progress</option>
+                        <option value="learning">Learning</option>
+                        <option value="needs_practice">Needs Practice</option>
+                        <option value="needs_revision">Needs Revision</option>
+                        <option value="exam_ready">Exam Ready</option>
                         <option value="completed">Completed</option>
                       </select>
                     </div>
@@ -403,13 +406,83 @@ export const StudyPlannerPage: React.FC = () => {
                 Set realistic study blocks tailored to your weak areas and exam schedule.
               </p>
             </div>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={() => setShowPlanModal(true)}
-            >
-              <Plus size={16} /> Plan New Block
-            </button>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button
+                type="button"
+                className="btn btn-subtle"
+                onClick={() => {
+                  const today = getTodayDateString();
+                  // 1. Check revisions due today
+                  const revDue = chapters.find(c => c.revisionDue && c.revisionDue <= today);
+                  // 2. Check weak subject pending chapters
+                  const weakPending = chapters.find(c => c.priority === 'high' && (c.status === 'not_started' || c.status === 'learning'));
+                  // 3. Regular pending chapter
+                  const anyPending = chapters.find(c => c.status === 'not_started');
+
+                  let generatedCount = 0;
+                  if (revDue) {
+                    addStudyPlan({
+                      date: today,
+                      subjectId: revDue.subjectId,
+                      chapterId: revDue.id,
+                      chapterName: `[Revision Due] ${revDue.name}`,
+                      plannedMinutes: 45,
+                      actualMinutes: 0,
+                      status: 'planned'
+                    });
+                    generatedCount++;
+                  }
+                  if (weakPending && weakPending.id !== revDue?.id) {
+                    addStudyPlan({
+                      date: today,
+                      subjectId: weakPending.subjectId,
+                      chapterId: weakPending.id,
+                      chapterName: `[Priority Focus] ${weakPending.name}`,
+                      plannedMinutes: 90,
+                      actualMinutes: 0,
+                      status: 'planned'
+                    });
+                    generatedCount++;
+                  }
+                  if (anyPending && anyPending.id !== revDue?.id && anyPending.id !== weakPending?.id) {
+                    addStudyPlan({
+                      date: today,
+                      subjectId: anyPending.subjectId,
+                      chapterId: anyPending.id,
+                      chapterName: `[New Study] ${anyPending.name}`,
+                      plannedMinutes: 60,
+                      actualMinutes: 0,
+                      status: 'planned'
+                    });
+                    generatedCount++;
+                  }
+
+                  // Also add Daily 100 MCQ Practice block
+                  addStudyPlan({
+                    date: today,
+                    subjectId: 'physics',
+                    chapterId: 'mcq-mission-daily',
+                    chapterName: 'Daily 100 MCQ Mission (PCB split)',
+                    plannedMinutes: 60,
+                    actualMinutes: 0,
+                    status: 'planned'
+                  });
+                  generatedCount++;
+
+                  alert(`Intelligently scheduled ${generatedCount} study blocks for today based on your real revision due and pending syllabus!`);
+                }}
+                title="Intelligently auto-generates timetable blocks following: Revisions Due > Weak Areas > Priority Backlog > 100 MCQs"
+              >
+                ⚡ Auto-Generate Today's Plan
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => setShowPlanModal(true)}
+              >
+                <Plus size={16} /> Plan New Block
+              </button>
+            </div>
           </div>
 
           {studyPlans.length === 0 ? (

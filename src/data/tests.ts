@@ -18,6 +18,14 @@ export const OFFICIAL_TEST_SERIES: TestSeriesDefinition[] = [
     description: '150 question high-yield assessment covering mechanics, thermodynamics, cell biology, and structural organization.'
   },
   {
+    id: 'test-biology-grand-125',
+    title: 'PCB Core Diagnostic Exam (125 Questions)',
+    type: 'Part Syllabus',
+    questionCount: 125,
+    durationMinutes: 125,
+    description: 'Balanced 125 question test series spanning fundamental Physics, Chemistry, and Biology modules under exam timing.'
+  },
+  {
     id: 'test-physics-subject-100',
     title: 'Complete Physics Mastery Test',
     type: 'Subject Test',

@@ -2,7 +2,14 @@
 
 export type SubjectId = 'physics' | 'chemistry' | 'botany' | 'zoology';
 export type ClassLevel = '11' | '12';
-export type ChapterStatus = 'not_started' | 'in_progress' | 'completed';
+export type ChapterStatus = 
+  | 'not_started' 
+  | 'learning' 
+  | 'needs_practice' 
+  | 'needs_revision' 
+  | 'exam_ready' 
+  | 'in_progress' 
+  | 'completed';
 export type StrengthLevel = 'weak' | 'average' | 'strong';
 export type PlannerStatus = 'planned' | 'in_progress' | 'done' | 'skipped' | 'rescheduled';
 export type DoubtStatus = 'open' | 'resolved';

@@ -334,6 +334,57 @@ export const ProfileSettingsPage: React.FC = () => {
         </button>
       </form>
 
+      {/* Parent System Architecture Card */}
+      <div
+        className="card"
+        style={{
+          padding: '24px',
+          marginBottom: '24px',
+          border: '1px solid var(--border-medium)'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Shield size={20} color="var(--primary-700)" />
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, margin: 0 }}>
+              Parent Companion & Accountability Link
+            </h3>
+          </div>
+          <span className="badge badge-yellow">Parent Sync — Coming in Backend Phase</span>
+        </div>
+
+        <p style={{ fontSize: '0.825rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '16px' }}>
+          Rabbit believes in honest accountability without intrusive surveillance. In the upcoming authenticated backend phase, parents will be able to verify via OTP to view only real preparation statistics (study hours, chapters revised, test scores, and 100 MCQ mission). 
+          <strong> Rabbit strictly forbids tracking WhatsApp, Instagram, phone calls, or location.</strong>
+        </p>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px', opacity: 0.85 }}>
+          <div className="form-group" style={{ margin: 0 }}>
+            <label className="form-label" style={{ fontSize: '0.78rem' }}>Student Mobile Number</label>
+            <input
+              type="tel"
+              className="form-input"
+              placeholder="+91 98765 43210"
+              disabled
+              style={{ backgroundColor: 'var(--bg-subtle)', cursor: 'not-allowed' }}
+            />
+          </div>
+          <div className="form-group" style={{ margin: 0 }}>
+            <label className="form-label" style={{ fontSize: '0.78rem' }}>Parent / Guardian Mobile Number</label>
+            <input
+              type="tel"
+              className="form-input"
+              placeholder="+91 91234 56789"
+              disabled
+              style={{ backgroundColor: 'var(--bg-subtle)', cursor: 'not-allowed' }}
+            />
+          </div>
+        </div>
+        <div style={{ marginTop: '10px', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+          🔒 OTP verification and secure parent portal will activate upon cloud database launch. No fake synchronization is simulated locally.
+        </div>
+      </div>
+
       {/* Privacy Guarantee Card */}
       <div
         className="card"

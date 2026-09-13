@@ -104,145 +104,156 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({ onNavigate }) => {
     setShowQuickPlanModal(false);
   };
 
+  // Real revision count due today
+  const revisionsDueCount = revisionsDue.length;
+
   return (
-    <div className="page-container">
-      {/* Top Banner: Greeting & Exam Countdown */}
+    <div className="page-container" style={{ maxWidth: '1000px', margin: '0 auto' }}>
+      {/* Calm, Serious App Header */}
       <div
-        className="card"
         style={{
-          background: 'linear-gradient(135deg, #064E3B 0%, #065F46 100%)',
-          color: '#FFFFFF',
-          padding: '24px 28px',
-          marginBottom: '24px',
-          border: 'none',
-          position: 'relative',
-          overflow: 'hidden'
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingBottom: '16px',
+          marginBottom: '20px',
+          borderBottom: '1px solid var(--border-subtle)'
         }}
       >
-        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '20px' }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-              <span style={{ fontSize: '0.8rem', padding: '2px 8px', borderRadius: '20px', backgroundColor: 'rgba(255,255,255,0.2)', fontWeight: 600 }}>
-                {profile?.gradeStatus === 'class12' ? 'Class 12th Aspirant' : 'Repeater / Dropper'}
-              </span>
-              <span style={{ fontSize: '0.8rem', padding: '2px 8px', borderRadius: '20px', backgroundColor: 'rgba(255,255,255,0.2)', fontWeight: 600 }}>
-                Target: {profile?.targetScore || 680} / 720
-              </span>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '0.78rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--primary-700)' }}>
+              RABBIT NEET
+            </span>
+            <span style={{ fontSize: '0.75rem', padding: '1px 6px', borderRadius: '4px', backgroundColor: 'var(--bg-subtle)', color: 'var(--text-secondary)' }}>
+              {profile?.targetYear ? `NEET ${profile.targetYear}` : 'NEET 2027'}
+            </span>
+          </div>
+          <h1 style={{ fontSize: '1.45rem', fontWeight: 800, color: 'var(--text-primary)', margin: '2px 0 0 0', letterSpacing: '-0.02em' }}>
+            Good day, {profile?.name || 'Aspirant'}
+          </h1>
+        </div>
+
+        <div
+          style={{
+            textAlign: 'right',
+            padding: '8px 14px',
+            backgroundColor: 'var(--bg-subtle)',
+            borderRadius: 'var(--radius-md)',
+            border: '1px solid var(--border-subtle)'
+          }}
+        >
+          <div style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)' }}>
+            DAYS REMAINING
+          </div>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.1 }}>
+            {daysLeft}
+          </div>
+        </div>
+      </div>
+
+      {/* TODAY'S PROGRESS — Clean 4-Metric Grid */}
+      <div style={{ marginBottom: '22px' }}>
+        <div style={{ fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--text-muted)', marginBottom: '8px' }}>
+          TODAY'S PROGRESS
+        </div>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: '10px'
+          }}
+        >
+          {/* Study */}
+          <div className="card" style={{ padding: '12px 14px', textAlign: 'center' }}>
+            <div style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--text-muted)' }}>STUDY</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '2px' }}>
+              {todayStudyHours}h
             </div>
-            <h1 style={{ fontSize: '1.65rem', fontWeight: 800, letterSpacing: '-0.02em', margin: 0 }}>
-              Focus on today, {profile?.name || 'Doctor'}.
-            </h1>
-            <p style={{ fontSize: '0.875rem', opacity: 0.9, marginTop: '4px' }}>
-              Consistent daily blocks and honest question solving build high scores.
-            </p>
+            <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
+              / {profile?.dailyTargetHours || 6}h
+            </div>
           </div>
 
-          <div
-            style={{
-              backgroundColor: 'rgba(0, 0, 0, 0.25)',
-              padding: '16px 22px',
-              borderRadius: 'var(--radius-lg)',
-              textAlign: 'center',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
-              minWidth: '150px'
-            }}
-          >
-            <div style={{ fontSize: '0.72rem', letterSpacing: '0.08em', fontWeight: 700, textTransform: 'uppercase', opacity: 0.85 }}>
-              NEET COUNTDOWN
+          {/* MCQs */}
+          <div className="card" style={{ padding: '12px 14px', textAlign: 'center' }}>
+            <div style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--text-muted)' }}>MCQS</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.15rem', fontWeight: 800, color: todayMcqGoal.isCompleted ? 'var(--primary-600)' : 'var(--text-primary)', marginTop: '2px' }}>
+              {todayMcqGoal.attempted}
             </div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '2.4rem', fontWeight: 800, lineHeight: 1.1, margin: '4px 0' }}>
-              {daysLeft}
+            <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
+              / {todayMcqGoal.target}
             </div>
-            <div style={{ fontSize: '0.75rem', opacity: 0.85 }}>
-              Days Remaining
+          </div>
+
+          {/* Accuracy */}
+          <div className="card" style={{ padding: '12px 14px', textAlign: 'center' }}>
+            <div style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--text-muted)' }}>ACCURACY</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.15rem', fontWeight: 800, color: mcqAccuracy >= 75 ? 'var(--primary-600)' : 'var(--text-primary)', marginTop: '2px' }}>
+              {totalAttempted > 0 ? `${mcqAccuracy}%` : '—'}
+            </div>
+            <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
+              {todayMcqGoal.correct} correct
+            </div>
+          </div>
+
+          {/* Revision Due */}
+          <div className="card" style={{ padding: '12px 14px', textAlign: 'center' }}>
+            <div style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--text-muted)' }}>REVISION</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.15rem', fontWeight: 800, color: revisionsDueCount > 0 ? 'var(--danger)' : 'var(--primary-600)', marginTop: '2px' }}>
+              {revisionsDueCount}
+            </div>
+            <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
+              due today
             </div>
           </div>
         </div>
       </div>
 
-      {/* Smart Recommendations: WHAT SHOULD I DO NOW? & Quick Study Modes */}
+      {/* WHAT SHOULD I DO NOW? Command Center */}
       <SmartRecommendations onNavigate={onNavigate} />
 
-      {/* Primary KPI Grid */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
-          gap: '16px',
-          marginBottom: '24px'
-        }}
-      >
-        {/* Today's Study Time */}
-        <div className="card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--text-muted)' }}>
-            <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>TODAY’S STUDY TIME</span>
-            <Clock size={16} color="var(--primary-600)" />
-          </div>
-          <div style={{ marginTop: '10px' }}>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.75rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-              {todayStudyHours}h
-            </span>
-            <span style={{ fontSize: '0.825rem', color: 'var(--text-muted)', marginLeft: '6px' }}>
-              / {profile?.dailyTargetHours || 6}h planned
-            </span>
-          </div>
-          <div style={{ fontSize: '0.75rem', color: todayStudyMinutes >= (profile?.dailyTargetHours || 6) * 60 ? 'var(--primary-600)' : 'var(--text-muted)', marginTop: '4px' }}>
-            {todayStudyMinutes > 0 ? `${todayStudyMinutes} mins actual logged` : 'No study logged yet today'}
-          </div>
+      {/* QUICK ACTIONS BAR */}
+      <div className="card" style={{ padding: '14px 18px', marginBottom: '22px' }}>
+        <div style={{ fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--text-muted)', marginBottom: '10px' }}>
+          QUICK ACTIONS
         </div>
-
-        {/* Daily MCQ Progress */}
-        <div className="card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--text-muted)' }}>
-            <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>DAILY MCQ MISSION</span>
-            <Award size={16} color="var(--primary-600)" />
-          </div>
-          <div style={{ marginTop: '10px' }}>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.75rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-              {todayMcqGoal.attempted}
-            </span>
-            <span style={{ fontSize: '0.825rem', color: 'var(--text-muted)', marginLeft: '6px' }}>
-              / {todayMcqGoal.target} MCQs
-            </span>
-          </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-            Accuracy: <strong>{totalAttempted > 0 ? `${mcqAccuracy}%` : '—'}</strong>
-          </div>
-        </div>
-
-        {/* Syllabus Progress */}
-        <div className="card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--text-muted)' }}>
-            <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>SYLLABUS PROGRESS</span>
-            <BookOpen size={16} color="var(--primary-600)" />
-          </div>
-          <div style={{ marginTop: '10px' }}>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.75rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-              {syllabusPercent}%
-            </span>
-            <span style={{ fontSize: '0.825rem', color: 'var(--text-muted)', marginLeft: '6px' }}>
-              ({completedChapters}/{totalChapters} Ch.)
-            </span>
-          </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-            {inProgressChapters} chapters in progress
-          </div>
-        </div>
-
-        {/* Study Streak */}
-        <div className="card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--text-muted)' }}>
-            <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>STUDY STREAK</span>
-            <Flame size={16} color="var(--warning)" />
-          </div>
-          <div style={{ marginTop: '10px' }}>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.75rem', fontWeight: 700, color: streak > 0 ? 'var(--primary-600)' : 'var(--text-primary)' }}>
-              {streak} {streak === 1 ? 'Day' : 'Days'}
-            </span>
-          </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-            {streak > 0 ? 'Real daily activity verified' : 'Log activity today to start streak'}
-          </div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+          <button
+            type="button"
+            className="btn btn-sm btn-subtle"
+            onClick={() => onNavigate('study')}
+          >
+            <Clock size={14} /> Start Study Timer
+          </button>
+          <button
+            type="button"
+            className="btn btn-sm btn-subtle"
+            onClick={() => onNavigate('mcqs')}
+          >
+            <Award size={14} /> Daily 100 MCQs
+          </button>
+          <button
+            type="button"
+            className="btn btn-sm btn-subtle"
+            onClick={() => onNavigate('tests')}
+          >
+            <CheckCircle2 size={14} /> Test Series (50-200)
+          </button>
+          <button
+            type="button"
+            className="btn btn-sm btn-subtle"
+            onClick={() => onNavigate('mistakes')}
+          >
+            <AlertTriangle size={14} /> Mistake Notebook
+          </button>
+          <button
+            type="button"
+            className="btn btn-sm btn-subtle"
+            onClick={() => onNavigate('study')}
+          >
+            <RotateCcw size={14} /> Revision Due ({revisionsDueCount})
+          </button>
         </div>
       </div>
 

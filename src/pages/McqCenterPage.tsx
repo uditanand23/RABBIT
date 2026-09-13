@@ -4,7 +4,11 @@ import { DailyMcqMission } from '../components/DailyMcqMission';
 import { Target, Filter, Award, History, TrendingUp, Calendar, AlertCircle } from 'lucide-react';
 import { SubjectId, DifficultyLevel } from '../types';
 
-export const McqCenterPage: React.FC = () => {
+interface McqCenterPageProps {
+  onNavigate?: (tab: any) => void;
+}
+
+export const McqCenterPage: React.FC<McqCenterPageProps> = ({ onNavigate }) => {
   const { mcqRecords, todayMcqGoal, chapters } = useApp();
   const [filterSubject, setFilterSubject] = useState<SubjectId | 'all'>('all');
   const [filterDifficulty, setFilterDifficulty] = useState<DifficultyLevel | 'all'>('all');
@@ -36,17 +40,125 @@ export const McqCenterPage: React.FC = () => {
   });
 
   return (
-    <div className="page-container">
+    <div className="page-container" style={{ maxWidth: '1000px', margin: '0 auto' }}>
       <div className="page-header">
         <h1 className="page-title">MCQ Practice & Speed Center</h1>
         <p className="page-subtitle">
-          Daily 100 question discipline, historical accuracy analytics, and authentic PYQ tracking.
+          Daily 100 question discipline, quick practice sprints, and authentic PYQ tracking.
         </p>
       </div>
 
       {/* Hero Daily Mission Component */}
-      <div style={{ marginBottom: '24px' }}>
+      <div style={{ marginBottom: '20px' }}>
         <DailyMcqMission />
+      </div>
+
+      {/* Quick Practice & Test Series Hub */}
+      <div className="card" style={{ padding: '20px', marginBottom: '24px' }}>
+        <div style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-muted)', marginBottom: '12px' }}>
+          QUESTION PRACTICE ENVIRONMENTS
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
+          <button
+            type="button"
+            className="card-clickable"
+            onClick={() => onNavigate && onNavigate('tests')}
+            style={{
+              padding: '16px',
+              borderRadius: 'var(--radius-md)',
+              backgroundColor: 'var(--bg-subtle)',
+              border: '1px solid var(--border-subtle)',
+              textAlign: 'left'
+            }}
+          >
+            <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-primary)', marginBottom: '4px' }}>
+              ⚡ 25 MCQs Sprint
+            </div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+              Quick focused set with timer & negative marking
+            </div>
+          </button>
+
+          <button
+            type="button"
+            className="card-clickable"
+            onClick={() => onNavigate && onNavigate('tests')}
+            style={{
+              padding: '16px',
+              borderRadius: 'var(--radius-md)',
+              backgroundColor: 'var(--bg-subtle)',
+              border: '1px solid var(--border-subtle)',
+              textAlign: 'left'
+            }}
+          >
+            <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-primary)', marginBottom: '4px' }}>
+              🎯 50 MCQs Diagnostic
+            </div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+              Full single-subject test (Physics / Chemistry / Biology)
+            </div>
+          </button>
+
+          <button
+            type="button"
+            className="card-clickable"
+            onClick={() => onNavigate && onNavigate('tests')}
+            style={{
+              padding: '16px',
+              borderRadius: 'var(--radius-md)',
+              backgroundColor: 'var(--bg-subtle)',
+              border: '1px solid var(--border-subtle)',
+              textAlign: 'left'
+            }}
+          >
+            <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-primary)', marginBottom: '4px' }}>
+              🏆 Test Series (100–200 Qs)
+            </div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+              100, 125, 150 & 200 question full NEET mocks
+            </div>
+          </button>
+
+          <button
+            type="button"
+            className="card-clickable"
+            onClick={() => onNavigate && onNavigate('mistakes')}
+            style={{
+              padding: '16px',
+              borderRadius: 'var(--radius-md)',
+              backgroundColor: 'var(--bg-subtle)',
+              border: '1px solid var(--border-subtle)',
+              textAlign: 'left'
+            }}
+          >
+            <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-primary)', marginBottom: '4px' }}>
+              📖 Mistake Notebook
+            </div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+              Re-solve questions you got wrong
+            </div>
+          </button>
+
+          <button
+            type="button"
+            className="card-clickable"
+            onClick={() => onNavigate && onNavigate('pyqs')}
+            style={{
+              padding: '16px',
+              borderRadius: 'var(--radius-md)',
+              backgroundColor: 'var(--bg-subtle)',
+              border: '1px solid var(--border-subtle)',
+              textAlign: 'left'
+            }}
+          >
+            <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-primary)', marginBottom: '4px' }}>
+              📜 Authentic PYQs
+            </div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+              Explore real exam questions by chapter & year
+            </div>
+          </button>
+        </div>
       </div>
 
       {/* Aggregate Cumulative Analytics (Non-fabricated) */}

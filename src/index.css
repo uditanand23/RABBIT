@@ -374,6 +374,28 @@ button, input, select, textarea {
   .hidden-mobile {
     display: none !important;
   }
+
+  .page-container {
+    padding: 16px 12px 84px 12px;
+  }
+
+  .card {
+    padding: 16px 14px;
+    border-radius: var(--radius-md);
+  }
+
+  .page-title {
+    font-size: 1.35rem;
+  }
+
+  .btn {
+    min-height: 42px; /* Touch-friendly */
+  }
+
+  .mobile-only-nav {
+    padding-bottom: env(safe-area-inset-bottom, 8px);
+    height: calc(56px + env(safe-area-inset-bottom, 8px));
+  }
 }
 
 @media (min-width: 768px) {

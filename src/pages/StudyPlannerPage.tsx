@@ -17,6 +17,7 @@ import {
   ShieldAlert
 } from 'lucide-react';
 import { getTodayDateString } from '../services/storage';
+import { StudyTimer } from '../components/StudyTimer';
 
 export const StudyPlannerPage: React.FC = () => {
   const {
@@ -136,31 +137,36 @@ export const StudyPlannerPage: React.FC = () => {
         </p>
       </div>
 
-      {/* Tabs */}
+      {/* Integrated Study Workspace Hero: START STUDYING */}
+      <div style={{ marginBottom: '24px' }}>
+        <StudyTimer />
+      </div>
+
+      {/* Workspace Navigation Tabs */}
       <div className="tab-list">
-        <button
-          className={`tab-btn ${activeTab === 'syllabus' ? 'active' : ''}`}
-          onClick={() => setActiveTab('syllabus')}
-        >
-          Complete Syllabus ({chapters.length} Ch.)
-        </button>
         <button
           className={`tab-btn ${activeTab === 'planner' ? 'active' : ''}`}
           onClick={() => setActiveTab('planner')}
         >
-          Daily Planner ({studyPlans.length} Blocks)
+          Today's Plan ({studyPlans.length})
+        </button>
+        <button
+          className={`tab-btn ${activeTab === 'syllabus' ? 'active' : ''}`}
+          onClick={() => setActiveTab('syllabus')}
+        >
+          Chapter Tracker ({chapters.length})
         </button>
         <button
           className={`tab-btn ${activeTab === 'logs' ? 'active' : ''}`}
           onClick={() => setActiveTab('logs')}
         >
-          Study Log History ({studyLogs.length})
+          Study History ({studyLogs.length})
         </button>
         <button
           className={`tab-btn ${activeTab === 'doubts' ? 'active' : ''}`}
           onClick={() => setActiveTab('doubts')}
         >
-          Doubt Tracker ({doubts.filter(d => d.status === 'open').length} Open)
+          Doubts ({doubts.filter(d => d.status === 'open').length} Open)
         </button>
       </div>
 

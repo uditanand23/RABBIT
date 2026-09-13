@@ -123,13 +123,11 @@ export const Sidebar: React.FC<NavigationProps> = ({ currentTab, onTabChange, st
 
 export const MobileBottomNav: React.FC<NavigationProps> = ({ currentTab, onTabChange }) => {
   const navItems: { id: NavTab; label: string; icon: React.ReactNode }[] = [
-    { id: 'home', label: 'Home', icon: <Home size={18} /> },
-    { id: 'study', label: 'Study', icon: <BookOpen size={18} /> },
-    { id: 'mcqs', label: '100 MCQs', icon: <Target size={18} /> },
-    { id: 'tests', label: 'Tests', icon: <Award size={18} /> },
-    { id: 'mistakes', label: 'Mistakes', icon: <AlertOctagon size={18} /> },
-    { id: 'progress', label: 'Map', icon: <BarChart2 size={18} /> },
-    { id: 'profile', label: 'Profile', icon: <User size={18} /> }
+    { id: 'home', label: 'Home', icon: <Home size={20} /> },
+    { id: 'study', label: 'Study', icon: <BookOpen size={20} /> },
+    { id: 'mcqs', label: 'MCQs', icon: <Target size={20} /> },
+    { id: 'progress', label: 'Progress', icon: <BarChart2 size={20} /> },
+    { id: 'profile', label: 'Profile', icon: <User size={20} /> }
   ];
 
   return (

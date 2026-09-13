@@ -26,14 +26,14 @@ export const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({ onNa
 
   // Deterministic Recommendation Engine (No fake AI)
   const getActionRecommendation = (): RecommendationAction => {
-    // 1. Check if Revisions are Overdue in Mistake Notebook
+    // 1. Revision Due Today (Mistake notebook or Chapter spaced repetition)
     const urgentMistakes = mistakes.filter(m => m.nextRevisionDate <= todayStr && m.masteryState !== 'mastered');
     if (urgentMistakes.length > 0) {
       return {
         id: 'rec-mistake-due',
         actionTitle: `Re-Test ${urgentMistakes.length} Mistake Questions`,
-        actionSubtitle: `Spaced repetition interval due today for ${urgentMistakes[0].chapterName}.`,
-        reason: 'Unrevised mistakes lead to repeated errors in the exam hall.',
+        actionSubtitle: `${urgentMistakes[0].chapterName} (${urgentMistakes[0].subject.toUpperCase()})`,
+        reason: `${urgentMistakes.length} mistake revisions are due today based on your spaced interval schedule.`,
         estimatedMinutes: 20,
         category: 'MISTAKE',
         buttonLabel: 'START MISTAKE REVIEW',
@@ -41,29 +41,51 @@ export const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({ onNa
       };
     }
 
-    // 2. Check Daily 100 MCQ Goal progress
-    const remainingMcqs = Math.max(0, todayMcqGoal.target - todayMcqGoal.attempted);
-    if (remainingMcqs > 0) {
+    const chapterRev = chapters.find(c => c.revisionDue && c.revisionDue <= todayStr);
+    if (chapterRev) {
       return {
-        id: 'rec-mcq-sprint',
-        actionTitle: `Solve Next 25 MCQs (${todayMcqGoal.attempted}/${todayMcqGoal.target} Done)`,
-        actionSubtitle: 'Maintain daily discipline across high-yield chapters.',
-        reason: 'Daily question volume builds exam stamina and speed.',
+        id: 'rec-chapter-rev',
+        actionTitle: `Revision: ${chapterRev.name}`,
+        actionSubtitle: `Class ${chapterRev.classLevel} ${chapterRev.subjectId.toUpperCase()}`,
+        reason: `Spaced revision interval reached today for this completed chapter.`,
         estimatedMinutes: 30,
-        category: 'PRACTICE',
-        buttonLabel: 'OPEN MCQ MISSION',
-        navTarget: 'mcqs'
+        category: 'REVISION',
+        buttonLabel: 'START REVISION',
+        navTarget: 'study'
       };
     }
 
-    // 3. Check for High Priority Backlog
+    // 2. Weak Topic Focus (Accuracy < 60% with >= 10 MCQs, or flagged weak in profile)
+    const weakChapter = chapters.find(c => {
+      if (c.mcqCount >= 10) {
+        return (c.correctMcqs / c.mcqCount) * 100 < 60;
+      }
+      return profile?.strengths[c.subjectId] === 'weak' && c.status !== 'completed';
+    });
+    if (weakChapter) {
+      const acc = weakChapter.mcqCount > 0 ? Math.round((weakChapter.correctMcqs / weakChapter.mcqCount) * 100) : 0;
+      return {
+        id: 'rec-weak-chapter',
+        actionTitle: `Strengthen ${weakChapter.subjectId.toUpperCase()}: ${weakChapter.name}`,
+        actionSubtitle: `Targeted concept remediation`,
+        reason: weakChapter.mcqCount > 0 
+          ? `Current accuracy is ${acc}% across ${weakChapter.mcqCount} questions.`
+          : `${weakChapter.subjectId.toUpperCase()} is self-flagged as your weakest subject.`,
+        estimatedMinutes: 45,
+        category: 'PRACTICE',
+        buttonLabel: 'STUDY WEAK CHAPTER',
+        navTarget: 'study'
+      };
+    }
+
+    // 3. High-Priority Pending Backlog
     const backlog = chapters.find(c => c.priority === 'high' && c.status === 'not_started');
     if (backlog) {
       return {
         id: 'rec-backlog',
-        actionTitle: `Start Backlog Chapter: ${backlog.name}`,
-        actionSubtitle: `Class ${backlog.classLevel} ${backlog.subjectId.toUpperCase()} high-priority chapter.`,
-        reason: 'High-priority chapters carry foundational conceptual weight in NEET.',
+        actionTitle: `Begin Backlog: ${backlog.name}`,
+        actionSubtitle: `Class ${backlog.classLevel} ${backlog.subjectId.toUpperCase()}`,
+        reason: `High foundational weightage chapter waiting to be started.`,
         estimatedMinutes: 45,
         category: 'PRACTICE',
         buttonLabel: 'VIEW CHAPTER SYLLABUS',
@@ -71,26 +93,27 @@ export const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({ onNa
       };
     }
 
-    // Default: Spaced chapter revision
-    const chapterRev = chapters.find(c => c.revisionDue && c.revisionDue <= todayStr);
-    if (chapterRev) {
+    // 4. Daily 100 MCQ Goal progress
+    const remainingMcqs = Math.max(0, todayMcqGoal.target - todayMcqGoal.attempted);
+    if (remainingMcqs > 0) {
       return {
-        id: 'rec-chapter-rev',
-        actionTitle: `Spaced Revision: ${chapterRev.name}`,
-        actionSubtitle: `Revise key formula sheets and NCERT summaries.`,
-        reason: 'Scheduled 3-day spaced review cycle.',
-        estimatedMinutes: 25,
-        category: 'REVISION',
-        buttonLabel: 'START REVISION',
-        navTarget: 'study'
+        id: 'rec-mcq-sprint',
+        actionTitle: `Solve Next 25 MCQs (${todayMcqGoal.attempted}/${todayMcqGoal.target} Done)`,
+        actionSubtitle: `${remainingMcqs} MCQs left to achieve today's mission.`,
+        reason: 'Daily question volume builds exam stamina, speed, and negative-mark discipline.',
+        estimatedMinutes: 30,
+        category: 'PRACTICE',
+        buttonLabel: 'CONTINUE 100 MCQS',
+        navTarget: 'mcqs'
       };
     }
 
+    // 5. Default Diagnostic
     return {
       id: 'rec-mock',
       actionTitle: 'Take a 50-Question Diagnostic Test',
-      actionSubtitle: 'Evaluate current recall speed and accuracy under timed pressure.',
-      reason: 'Regular diagnostics benchmark your progress toward your target score.',
+      actionSubtitle: 'Benchmark your accuracy under real NEET negative marking conditions.',
+      reason: 'Regular diagnostics evaluate recall speed and test endurance.',
       estimatedMinutes: 45,
       category: 'MOCK',
       buttonLabel: 'OPEN TEST SERIES',

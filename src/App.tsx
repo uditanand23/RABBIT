@@ -33,7 +33,7 @@ export const App: React.FC = () => {
       <main className="main-content">
         {currentTab === 'home' && <HomeDashboard onNavigate={setCurrentTab} />}
         {currentTab === 'study' && <StudyPlannerPage />}
-        {currentTab === 'mcqs' && <McqCenterPage />}
+        {currentTab === 'mcqs' && <McqCenterPage onNavigate={setCurrentTab} />}
         {currentTab === 'tests' && <TestSeriesPage onNavigate={setCurrentTab} />}
         {currentTab === 'mistakes' && <MistakeNotebookPage />}
         {currentTab === 'pyqs' && <PyqArchitecturePage />}

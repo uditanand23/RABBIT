@@ -17,11 +17,13 @@ import {
 } from 'lucide-react';
 
 export const PyqArchitecturePage: React.FC = () => {
-  const { chapters, mcqRecords } = useApp();
+  const { chapters, mcqRecords, questions } = useApp();
 
   const [selectedSubject, setSelectedSubject] = useState<SubjectId | 'all'>('all');
   const [selectedYear, setSelectedYear] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [filterDifficulty, setFilterDifficulty] = useState<string>('all');
+  const [filterContentLevel, setFilterContentLevel] = useState<string>('all');
 
   // 20+ Years NEET / AIPMT exam year spectrum
   const years = [
@@ -30,6 +32,8 @@ export const PyqArchitecturePage: React.FC = () => {
     '2014', '2013', '2012', '2011', '2010',
     '2009', '2008', '2007', '2006', '2005'
   ];
+
+  const [activeView, setActiveView] = useState<'heatmap' | 'year_matrix' | 'explorer' | 'ingestion'>('heatmap');
 
   // Derive genuine PYQ Intelligence from chapters and user's actual attempts
   const topicIntelligence: TopicPyqIntelligence[] = [];
@@ -70,7 +74,6 @@ export const PyqArchitecturePage: React.FC = () => {
   const totalPyqsCorrect = mcqRecords.filter(r => r.isPyq).reduce((acc, r) => acc + r.correct, 0);
   const pyqAccuracy = totalPyqsSolved > 0 ? Math.round((totalPyqsCorrect / totalPyqsSolved) * 100) : 0;
 
-  const [activeView, setActiveView] = useState<'heatmap' | 'year_matrix' | 'ingestion'>('heatmap');
   const [importJsonText, setImportJsonText] = useState('');
   const [importResult, setImportResult] = useState<{
     total: number;
@@ -140,6 +143,12 @@ export const PyqArchitecturePage: React.FC = () => {
           onClick={() => setActiveView('year_matrix')}
         >
           20+ Year Paper Matrix
+        </button>
+        <button
+          className={`btn ${activeView === 'explorer' ? 'btn-primary' : 'btn-secondary'} btn-sm`}
+          onClick={() => setActiveView('explorer')}
+        >
+          Question Bank & PYQ Explorer
         </button>
         <button
           className={`btn ${activeView === 'ingestion' ? 'btn-primary' : 'btn-secondary'} btn-sm`}
@@ -408,7 +417,139 @@ export const PyqArchitecturePage: React.FC = () => {
         </div>
       )}
 
-      {/* VIEW 3: AUTHENTIC DATASET INGESTION PIPELINE */}
+      {/* VIEW 3: QUESTION BANK & PYQ EXPLORER */}
+      {activeView === 'explorer' && (
+        <div className="card" style={{ padding: '24px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '16px' }}>
+            <div>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '4px' }}>
+                Question Bank & PYQ Explorer ({questions.length} Questions)
+              </h3>
+              <p style={{ fontSize: '0.825rem', color: 'var(--text-secondary)', margin: 0 }}>
+                Filter across Content Levels: Level 1 (Rabbit Practice), Level 2 (Verified Content), Level 3 (Verified PYQ).
+              </p>
+            </div>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              <select
+                className="form-select"
+                value={selectedSubject}
+                onChange={e => setSelectedSubject(e.target.value as any)}
+                style={{ fontSize: '0.8rem', padding: '6px 10px', width: 'auto' }}
+              >
+                <option value="all">All Subjects</option>
+                <option value="physics">Physics</option>
+                <option value="chemistry">Chemistry</option>
+                <option value="botany">Botany</option>
+                <option value="zoology">Zoology</option>
+              </select>
+
+              <select
+                className="form-select"
+                value={filterDifficulty}
+                onChange={e => setFilterDifficulty(e.target.value)}
+                style={{ fontSize: '0.8rem', padding: '6px 10px', width: 'auto' }}
+              >
+                <option value="all">All Difficulties</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+              </select>
+
+              <input
+                type="text"
+                className="form-input"
+                placeholder="Search concepts or tags..."
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                style={{ fontSize: '0.8rem', padding: '6px 10px', width: '180px' }}
+              />
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {questions
+              .filter(q => {
+                if (selectedSubject !== 'all' && q.subject !== selectedSubject) return false;
+                if (filterDifficulty !== 'all' && q.difficulty !== filterDifficulty) return false;
+                if (searchQuery.trim()) {
+                  const query = searchQuery.toLowerCase();
+                  const matchText = q.questionText.toLowerCase().includes(query);
+                  const matchTag = q.tags.some(t => t.toLowerCase().includes(query));
+                  const matchConcept = q.conceptTested?.toLowerCase().includes(query);
+                  if (!matchText && !matchTag && !matchConcept) return false;
+                }
+                return true;
+              })
+              .map((q, idx) => (
+                <div
+                  key={q.id}
+                  style={{
+                    padding: '16px',
+                    borderRadius: 'var(--radius-md)',
+                    border: '1px solid var(--border-subtle)',
+                    backgroundColor: 'var(--bg-surface)'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+                    <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' }}>
+                      <span className="badge badge-gray" style={{ textTransform: 'capitalize' }}>
+                        {q.subject}
+                      </span>
+                      <span className="badge badge-green" style={{ fontSize: '0.68rem' }}>
+                        {q.sourceType === 'VERIFIED_PYQ' ? 'LEVEL 3: VERIFIED PYQ' : 'LEVEL 1: RABBIT PRACTICE'}
+                      </span>
+                      <span className={`badge ${q.difficulty === 'easy' ? 'badge-green' : q.difficulty === 'medium' ? 'badge-yellow' : 'badge-red'}`} style={{ fontSize: '0.68rem' }}>
+                        {q.difficulty.toUpperCase()}
+                      </span>
+                      {q.isImportant && (
+                        <span className="badge badge-yellow" style={{ fontSize: '0.68rem' }}>HIGH YIELD</span>
+                      )}
+                    </div>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                      {q.id}
+                    </span>
+                  </div>
+
+                  <div style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--text-primary)', marginBottom: '8px', lineHeight: 1.4 }}>
+                    {idx + 1}. {q.questionText}
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '6px', marginBottom: '10px' }}>
+                    {q.options.map((opt, oIdx) => (
+                      <div
+                        key={oIdx}
+                        style={{
+                          padding: '6px 10px',
+                          borderRadius: 'var(--radius-sm)',
+                          fontSize: '0.8rem',
+                          backgroundColor: oIdx === q.correctAnswer ? 'var(--primary-50)' : 'var(--bg-subtle)',
+                          border: `1px solid ${oIdx === q.correctAnswer ? 'var(--primary-500)' : 'var(--border-subtle)'}`,
+                          color: oIdx === q.correctAnswer ? 'var(--primary-800)' : 'var(--text-secondary)',
+                          fontWeight: oIdx === q.correctAnswer ? 700 : 400
+                        }}
+                      >
+                        {String.fromCharCode(65 + oIdx)}. {opt} {oIdx === q.correctAnswer ? '✓ (Key)' : ''}
+                      </div>
+                    ))}
+                  </div>
+
+                  {q.explanation && (
+                    <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', backgroundColor: 'var(--bg-subtle)', padding: '8px 12px', borderRadius: 'var(--radius-sm)' }}>
+                      <strong>Solution Insight:</strong> {q.explanation}
+                      {q.commonTrap && (
+                        <div style={{ marginTop: '4px', color: '#b78103' }}>
+                          ⚠️ <strong>Common Trap:</strong> {q.commonTrap}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
+
+      {/* VIEW 4: AUTHENTIC DATASET INGESTION PIPELINE */}
       {activeView === 'ingestion' && (
         <div className="card" style={{ padding: '24px' }}>
           <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '6px' }}>

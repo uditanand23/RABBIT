@@ -21,6 +21,19 @@ export type QuestionSourceType =
   | 'RABBIT_PRACTICE'
   | 'USER_CREATED';
 
+export type ContentLevel =
+  | 'LEVEL_1_RABBIT_PRACTICE'
+  | 'LEVEL_2_VERIFIED_CONTENT'
+  | 'LEVEL_3_VERIFIED_PYQ'
+  | 'LEVEL_4_USER_CREATED';
+
+export type AdminWorkflowStatus =
+  | 'DRAFT'
+  | 'PENDING_REVIEW'
+  | 'APPROVED'
+  | 'REJECTED'
+  | 'PUBLISHED';
+
 export type VerificationStatus = 'VERIFIED' | 'UNVERIFIED' | 'PENDING_REVIEW' | 'COMMUNITY_FLAGGED';
 
 export type MistakeCategory =
@@ -98,6 +111,11 @@ export interface Question {
   videoSolutionUrl?: string;
   videoVerificationStatus?: VerificationStatus;
   videoSolution?: VideoSolution;
+  contentLevel?: ContentLevel;
+  adminStatus?: AdminWorkflowStatus;
+  createdAt?: string;
+  updatedAt?: string;
+  contentVersion?: number;
 }
 
 export interface QuestionAttempt {

@@ -4,6 +4,7 @@ import { OFFICIAL_TEST_SERIES } from '../data/tests';
 import { TestSeriesDefinition, TestResult, ActiveTestState, Question } from '../types';
 import { ActiveTestModal } from '../components/ActiveTestModal';
 import { TestResultView } from '../components/TestResultView';
+import { IntelligenceEngine } from '../services/intelligenceEngine';
 import {
   Award,
   Play,
@@ -28,34 +29,22 @@ export const TestSeriesPage: React.FC<TestSeriesPageProps> = ({ onNavigate }) =>
   const [selectedResult, setSelectedResult] = useState<TestResult | null>(null);
 
   const handleLaunchTest = (def: TestSeriesDefinition) => {
-    // Collect questions matching test parameters
-    let pool = [...questions];
-    if (def.subject) {
-      pool = pool.filter(q => q.subject === def.subject);
-    }
-    if (def.type === 'Mistake Notebook Test') {
-      const mistakeQIds = new Set(mistakes.map(m => m.questionId));
-      pool = pool.filter(q => mistakeQIds.has(q.id));
-      if (pool.length === 0) {
-        alert('Your Mistake Notebook is currently clean! Attempt questions and log mistakes to take this re-test.');
-        return;
-      }
-    }
+    const isPyqTest = def.type === 'PYQ Test';
+    const batchResult = IntelligenceEngine.selectAdaptiveBatch(
+      questions,
+      mistakes,
+      def.questionCount,
+      def.subject,
+      undefined,
+      isPyqTest
+    );
 
-    // If question count in pool < def.questionCount, expand pool by cycling available verified questions
-    // This allows realistic test pacing without fake content
-    const testQuestions: Question[] = [];
-    if (pool.length === 0) {
+    if (batchResult.questions.length === 0) {
       alert('No verified questions currently available for this specific test filter.');
       return;
     }
 
-    for (let i = 0; i < def.questionCount; i++) {
-      testQuestions.push({
-        ...pool[i % pool.length],
-        id: `tq_${def.id}_${i}_${pool[i % pool.length].id}`
-      });
-    }
+    const testQuestions = batchResult.questions;
 
     const newTestState: ActiveTestState = {
       testId: def.id,
@@ -126,7 +115,12 @@ export const TestSeriesPage: React.FC<TestSeriesPageProps> = ({ onNavigate }) =>
             >
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                  <span className="badge badge-gray">{testDef.type}</span>
+                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                    <span className="badge badge-gray">{testDef.type}</span>
+                    <span className={`badge ${testDef.type === 'PYQ Test' ? 'badge-yellow' : 'badge-green'}`} style={{ fontSize: '0.68rem' }}>
+                      {testDef.type === 'PYQ Test' ? 'LEVEL 3: VERIFIED PYQ' : 'LEVEL 1: RABBIT PRACTICE'}
+                    </span>
+                  </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                     <Clock size={14} />
                     <span>{testDef.durationMinutes} mins</span>

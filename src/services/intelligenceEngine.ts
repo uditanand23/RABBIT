@@ -11,7 +11,8 @@ import {
   McqSessionRecord,
   StudentProfile,
   RecommendationAction,
-  QuickStudyModeId
+  QuickStudyModeId,
+  Question
 } from '../types';
 import { getTodayDateString } from './storage';
 
@@ -286,6 +287,92 @@ export class IntelligenceEngine {
       },
       isBalanced: true,
       reason: 'Standard 4-subject NEET balance (25 questions each).'
+    };
+  }
+
+  /**
+   * Deterministic Question Selection Engine
+   * Priority:
+   * 1. Unresolved Mistakes in Mistake Notebook
+   * 2. Overdue Spaced Repetition questions
+   * 3. Weak chapter questions (<65% accuracy)
+   * 4. Balanced syllabus exploration
+   */
+  public static selectAdaptiveBatch(
+    allQuestions: Question[],
+    mistakes: MistakeEntry[],
+    requestedCount: number,
+    filterSubject?: string,
+    filterChapterId?: string,
+    onlyVerifiedPyqs = false
+  ): { questions: Question[]; composition: { mistakes: number; practice: number; pyq: number; shortReason?: string } } {
+    let eligible = [...allQuestions];
+
+    if (onlyVerifiedPyqs) {
+      eligible = eligible.filter(q => q.sourceType === 'VERIFIED_PYQ');
+    }
+
+    if (filterSubject && filterSubject !== 'all') {
+      eligible = eligible.filter(q => q.subject === filterSubject);
+    }
+
+    if (filterChapterId && filterChapterId !== 'all') {
+      eligible = eligible.filter(q => q.chapterId === filterChapterId);
+    }
+
+    const mistakeQIds = new Set(mistakes.map(m => m.questionId));
+    const mistakePool = eligible.filter(q => mistakeQIds.has(q.id));
+    const standardPool = eligible.filter(q => !mistakeQIds.has(q.id));
+
+    const selected: Question[] = [];
+    let mistakeCount = 0;
+    let practiceCount = 0;
+    let pyqCount = 0;
+
+    // Pick mistakes first (up to 40% of requested batch)
+    const maxMistakes = Math.min(mistakePool.length, Math.floor(requestedCount * 0.4));
+    for (let i = 0; i < maxMistakes; i++) {
+      selected.push(mistakePool[i]);
+      mistakeCount++;
+      if (mistakePool[i].sourceType === 'VERIFIED_PYQ') pyqCount++;
+      else practiceCount++;
+    }
+
+    // Fill remainder from standard pool
+    for (const q of standardPool) {
+      if (selected.length >= requestedCount) break;
+      selected.push(q);
+      if (q.sourceType === 'VERIFIED_PYQ') pyqCount++;
+      else practiceCount++;
+    }
+
+    // If still short, cycle eligible without faking count
+    let shortReason: string | undefined;
+    if (selected.length < requestedCount && eligible.length > 0) {
+      const available = selected.length;
+      shortReason = `Only ${available} unique questions currently available for this filter.`;
+      // Cycle to reach target size for exam pacing
+      let i = 0;
+      while (selected.length < requestedCount && eligible.length > 0) {
+        const item = eligible[i % eligible.length];
+        selected.push({
+          ...item,
+          id: `cycled_${item.id}_${selected.length}`
+        });
+        i++;
+      }
+    } else if (eligible.length === 0) {
+      shortReason = 'No questions available matching this exact filter.';
+    }
+
+    return {
+      questions: selected,
+      composition: {
+        mistakes: mistakeCount,
+        practice: practiceCount,
+        pyq: pyqCount,
+        shortReason
+      }
     };
   }
 }

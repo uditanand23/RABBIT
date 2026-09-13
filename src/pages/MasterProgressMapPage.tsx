@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { calculateDaysRemaining, getTodayDateString } from '../services/storage';
+import { IntelligenceEngine, ChapterMasteryDiagnosis } from '../services/intelligenceEngine';
 import {
   BarChart2,
   CheckCircle2,
@@ -11,7 +12,8 @@ import {
   RotateCcw,
   BookOpen,
   Plus,
-  Trash2
+  Trash2,
+  ShieldCheck
 } from 'lucide-react';
 import { SubjectId } from '../types';
 
@@ -42,11 +44,17 @@ export const MasterProgressMapPage: React.FC = () => {
   const daysLeft = profile ? calculateDaysRemaining(profile.examDate) : 0;
   const todayStr = getTodayDateString();
 
+  // Deterministic Intelligence Diagnoses across all chapters
+  const diagnoses: ChapterMasteryDiagnosis[] = chapters.map(c => IntelligenceEngine.diagnoseChapter(c, todayStr));
+  const examReadyCount = diagnoses.filter(d => d.state === 'EXAM_READY').length;
+  const learningCount = diagnoses.filter(d => d.state === 'LEARNING').length;
+  const needsPracticeCount = diagnoses.filter(d => d.state === 'NEEDS_PRACTICE').length;
+  const needsRevisionCount = diagnoses.filter(d => d.state === 'NEEDS_REVISION').length;
+  const notStartedCount = diagnoses.filter(d => d.state === 'NOT_STARTED').length;
+
   // Aggregate Calculations strictly from data
   const totalChapters = chapters.length;
-  const completedChapters = chapters.filter(c => c.status === 'completed').length;
-  const inProgressChapters = chapters.filter(c => c.status === 'in_progress').length;
-  const notStartedChapters = chapters.filter(c => c.status === 'not_started').length;
+  const completedChapters = chapters.filter(c => c.status === 'completed' || c.status === 'exam_ready').length;
   const syllabusPercentage = totalChapters > 0 ? Math.round((completedChapters / totalChapters) * 100) : 0;
 
   // Topics completed
@@ -175,6 +183,63 @@ export const MasterProgressMapPage: React.FC = () => {
           </div>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
             Target: {profile?.targetScore || 680} ({testsCompleted} mocks logged)
+          </div>
+        </div>
+      </div>
+
+      {/* Deterministic 5-State Chapter Mastery Strip */}
+      <div className="card" style={{ padding: '20px 24px', marginBottom: '24px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+          <div>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, margin: 0 }}>
+              Deterministic Chapter Mastery States
+            </h3>
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '3px' }}>
+              Transitions strictly evaluated from topic completion, MCQ accuracy, and spaced intervals. No arbitrary estimates.
+            </p>
+          </div>
+          <span className="badge badge-gray">{totalChapters} Total Chapters</span>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px' }}>
+          <div style={{ padding: '10px 14px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--primary-50)', border: '1px solid var(--primary-500)' }}>
+            <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--primary-800)' }}>EXAM READY</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.4rem', fontWeight: 800, color: 'var(--primary-700)' }}>
+              {examReadyCount}
+            </div>
+            <div style={{ fontSize: '0.68rem', color: 'var(--primary-600)' }}>All topics & acc ≥75%</div>
+          </div>
+
+          <div style={{ padding: '10px 14px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--bg-subtle)', border: '1px solid var(--border-medium)' }}>
+            <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)' }}>LEARNING</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+              {learningCount}
+            </div>
+            <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>In study progression</div>
+          </div>
+
+          <div style={{ padding: '10px 14px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--danger-bg)', border: '1px solid rgba(239, 68, 68, 0.3)' }}>
+            <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--danger)' }}>NEEDS PRACTICE</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.4rem', fontWeight: 800, color: 'var(--danger)' }}>
+              {needsPracticeCount}
+            </div>
+            <div style={{ fontSize: '0.68rem', color: '#991B1B' }}>Accuracy &lt; 65%</div>
+          </div>
+
+          <div style={{ padding: '10px 14px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--warning-bg)', border: '1px solid rgba(245, 158, 11, 0.3)' }}>
+            <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#92400E' }}>NEEDS REVISION</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.4rem', fontWeight: 800, color: '#B45309' }}>
+              {needsRevisionCount}
+            </div>
+            <div style={{ fontSize: '0.68rem', color: '#92400E' }}>Interval overdue</div>
+          </div>
+
+          <div style={{ padding: '10px 14px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--bg-subtle)', border: '1px solid var(--border-subtle)' }}>
+            <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)' }}>NOT STARTED</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-secondary)' }}>
+              {notStartedCount}
+            </div>
+            <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>Pending backlog</div>
           </div>
         </div>
       </div>
@@ -342,6 +407,22 @@ export const MasterProgressMapPage: React.FC = () => {
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.8rem', fontWeight: 800, color: (profile.targetScore - avgTestScore) > 0 ? 'var(--danger)' : 'var(--primary-600)', marginTop: '4px' }}>
                 {testsCompleted > 0 ? `${Math.max(0, profile.targetScore - avgTestScore)} Marks` : `${profile.targetScore} Marks`}
               </div>
+            </div>
+          </div>
+
+          {/* Actionable recommendations to bridge gap */}
+          <div style={{ marginTop: '16px', paddingTop: '14px', borderTop: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+              Actionable Gap Closure Strategy:
+            </div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+              • <strong>Practice Volume:</strong> To eliminate a {Math.max(0, profile.targetScore - avgTestScore)} mark deficit, sustain at least 50–100 MCQs daily across your weakest chapters.
+            </div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+              • <strong>Negative Marks:</strong> Focus on skipping doubtful questions during tests to prevent -1 deductions.
+            </div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+              • <strong>Spaced Revision:</strong> Complete all due revisions in your Mistake Notebook before starting fresh topics.
             </div>
           </div>
         </div>

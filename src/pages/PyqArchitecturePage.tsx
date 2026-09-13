@@ -193,6 +193,32 @@ export const PyqArchitecturePage: React.FC = () => {
         </div>
       </div>
 
+      {/* Year-Specific Notice if Single Year Filtered */}
+      {selectedYear !== 'all' && (
+        <div
+          className="card"
+          style={{
+            padding: '16px 20px',
+            backgroundColor: 'var(--bg-subtle)',
+            border: '1px solid var(--border-medium)',
+            marginBottom: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px'
+          }}
+        >
+          <Calendar size={20} color="var(--primary-600)" />
+          <div>
+            <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>
+              NEET {selectedYear} Paper Index
+            </div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+              Authentic verified question dataset for NEET {selectedYear} is queued for integration. Rabbit never manufactures fake past questions to fill historical slots.
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Topic-Level PYQ Intelligence Heatmap Table */}
       <div className="card" style={{ padding: '24px' }}>
         <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '6px' }}>

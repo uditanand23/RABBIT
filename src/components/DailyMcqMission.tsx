@@ -4,6 +4,7 @@ import { getTodayDateString } from '../services/storage';
 import { Target, CheckCircle, Flame, Plus, History, Award, Check } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { SubjectId, DifficultyLevel } from '../types';
+import { IntelligenceEngine } from '../services/intelligenceEngine';
 
 export const DailyMcqMission: React.FC = () => {
   const { todayMcqGoal, mcqRecords, chapters, addMcqSession, streak, profile } = useApp();
@@ -97,6 +98,11 @@ export const DailyMcqMission: React.FC = () => {
   const todayDate = getTodayDateString();
   const todaySessions = mcqRecords.filter(r => r.date === todayDate);
 
+  // Adaptive Daily 100 recommendation
+  const adaptiveDist = React.useMemo(() => {
+    return IntelligenceEngine.calculateAdaptiveDailyDistribution(mcqRecords, target);
+  }, [mcqRecords, target]);
+
   return (
     <div className="card" style={{ padding: '24px' }}>
       {/* Header */}
@@ -120,6 +126,36 @@ export const DailyMcqMission: React.FC = () => {
         >
           <Plus size={15} /> Record MCQs
         </button>
+      </div>
+
+      {/* Adaptive Recommendation Tag */}
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '8px',
+          padding: '10px 14px',
+          backgroundColor: adaptiveDist.isBalanced ? 'var(--bg-subtle)' : '#fff8e6',
+          border: `1px solid ${adaptiveDist.isBalanced ? 'var(--border-subtle)' : '#ffe082'}`,
+          borderRadius: 'var(--radius-md)',
+          marginBottom: '16px',
+          fontSize: '0.8rem'
+        }}
+      >
+        <div>
+          <span style={{ fontWeight: 700, color: adaptiveDist.isBalanced ? 'var(--text-primary)' : '#b78103' }}>
+            {adaptiveDist.isBalanced ? 'Recommended Distribution (Balanced): ' : 'Adaptive Weak-Area Target: '}
+          </span>
+          <span style={{ color: 'var(--text-secondary)' }}>{adaptiveDist.reason}</span>
+        </div>
+        <div style={{ display: 'flex', gap: '6px', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>
+          <span className="badge badge-gray" style={{ fontSize: '0.75rem' }}>Phy: {adaptiveDist.distribution.physics}</span>
+          <span className="badge badge-gray" style={{ fontSize: '0.75rem' }}>Chem: {adaptiveDist.distribution.chemistry}</span>
+          <span className="badge badge-gray" style={{ fontSize: '0.75rem' }}>Bot: {adaptiveDist.distribution.botany}</span>
+          <span className="badge badge-gray" style={{ fontSize: '0.75rem' }}>Zoo: {adaptiveDist.distribution.zoology}</span>
+        </div>
       </div>
 
       {/* Numerical Indicator */}

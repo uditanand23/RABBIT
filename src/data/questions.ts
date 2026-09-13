@@ -1,13 +1,20 @@
+/**
+ * Rabbit Diagnostic Practice Question Repository
+ * All questions strictly labeled as sourceType: 'RABBIT_PRACTICE'
+ * with sourceName: 'Rabbit Academic Development Team' and verificationStatus: 'VERIFIED'.
+ * Zero fabricated PYQs.
+ */
+
 import { Question } from '../types';
 
-// Authentic curated seed questions for Rabbit NEET Practice & Diagnostics.
-// Each question explicitly distinguishes sourceType: 'RABBIT_PRACTICE' vs 'VERIFIED_PYQ'
-// and marks verificationStatus: 'VERIFIED'.
 export const SEED_QUESTION_BANK: Question[] = [
   // ==================== PHYSICS ====================
   {
     id: 'q-phy-001',
     sourceType: 'RABBIT_PRACTICE',
+    verificationStatus: 'VERIFIED',
+    sourceName: 'Rabbit Academic Team',
+    sourceReference: 'Diagnostic Practice Bank V1 — Physics Core',
     subject: 'physics',
     classLevel: '11',
     chapterId: 'phy-11-01',
@@ -31,6 +38,7 @@ export const SEED_QUESTION_BANK: Question[] = [
       'Momentum and Impulse have dimensions [M L T^-1].'
     ],
     formulaUsed: '[W] = [F][d] = [M L T^-2][L] = [M L^2 T^-2]',
+    commonTrap: 'Confusing Power [M L^2 T^-3] with Work or Energy.',
     difficulty: 'easy',
     isImportant: true,
     isTricky: false,
@@ -38,12 +46,14 @@ export const SEED_QUESTION_BANK: Question[] = [
     estimatedTimeSeconds: 45,
     negativeMarking: -1,
     solutionAvailable: true,
-    videoSolutionAvailable: false,
-    verificationStatus: 'VERIFIED'
+    videoSolutionAvailable: false
   },
   {
     id: 'q-phy-002',
     sourceType: 'RABBIT_PRACTICE',
+    verificationStatus: 'VERIFIED',
+    sourceName: 'Rabbit Academic Team',
+    sourceReference: 'Diagnostic Practice Bank V1 — Physics Kinematics',
     subject: 'physics',
     classLevel: '11',
     chapterId: 'phy-11-02',
@@ -67,6 +77,7 @@ export const SEED_QUESTION_BANK: Question[] = [
       'H/3 is mathematically incorrect.'
     ],
     formulaUsed: 'h = (1/2)gt^2; Height from ground = H - h',
+    commonTrap: 'Reading the question carelessly and confusing distance fallen from top (H/4) with height from ground (3H/4).',
     difficulty: 'medium',
     isImportant: true,
     isTricky: true,
@@ -74,12 +85,14 @@ export const SEED_QUESTION_BANK: Question[] = [
     estimatedTimeSeconds: 60,
     negativeMarking: -1,
     solutionAvailable: true,
-    videoSolutionAvailable: false,
-    verificationStatus: 'VERIFIED'
+    videoSolutionAvailable: false
   },
   {
     id: 'q-phy-003',
     sourceType: 'RABBIT_PRACTICE',
+    verificationStatus: 'VERIFIED',
+    sourceName: 'Rabbit Academic Team',
+    sourceReference: 'Diagnostic Practice Bank V1 — Physics Dynamics',
     subject: 'physics',
     classLevel: '11',
     chapterId: 'phy-11-04',
@@ -103,6 +116,7 @@ export const SEED_QUESTION_BANK: Question[] = [
       '5 N is an incorrect calculation.'
     ],
     formulaUsed: 'fs(max) = μs·m·g; f_static = F_applied when F_applied < fs(max)',
+    commonTrap: 'Assuming friction is always equal to μ·N without comparing with applied force.',
     difficulty: 'medium',
     isImportant: true,
     isTricky: true,
@@ -110,12 +124,14 @@ export const SEED_QUESTION_BANK: Question[] = [
     estimatedTimeSeconds: 60,
     negativeMarking: -1,
     solutionAvailable: true,
-    videoSolutionAvailable: false,
-    verificationStatus: 'VERIFIED'
+    videoSolutionAvailable: false
   },
   {
     id: 'q-phy-004',
     sourceType: 'RABBIT_PRACTICE',
+    verificationStatus: 'VERIFIED',
+    sourceName: 'Rabbit Academic Team',
+    sourceReference: 'Diagnostic Practice Bank V1 — Physics Circuits',
     subject: 'physics',
     classLevel: '12',
     chapterId: 'phy-12-03',
@@ -133,6 +149,7 @@ export const SEED_QUESTION_BANK: Question[] = [
     conceptTested: 'Wheatstone bridge null balance principle',
     whyCorrect: 'P / Q = R / S is the standard condition for zero galvanometer deflection.',
     formulaUsed: 'P / Q = R / S',
+    commonTrap: 'Cross-multiplication confusion between adjacent and opposite arm ratios.',
     difficulty: 'easy',
     isImportant: true,
     isTricky: false,
@@ -140,12 +157,14 @@ export const SEED_QUESTION_BANK: Question[] = [
     estimatedTimeSeconds: 30,
     negativeMarking: -1,
     solutionAvailable: true,
-    videoSolutionAvailable: false,
-    verificationStatus: 'VERIFIED'
+    videoSolutionAvailable: false
   },
   {
     id: 'q-phy-005',
     sourceType: 'RABBIT_PRACTICE',
+    verificationStatus: 'VERIFIED',
+    sourceName: 'Rabbit Academic Team',
+    sourceReference: 'Diagnostic Practice Bank V1 — Physics Quantum',
     subject: 'physics',
     classLevel: '12',
     chapterId: 'phy-12-11',
@@ -169,6 +188,7 @@ export const SEED_QUESTION_BANK: Question[] = [
       'Kinetic energy depends directly on frequency, so it cannot remain unchanged.'
     ],
     formulaUsed: 'KE_max = hν - Φ; KE\' = 2(hν - Φ) + Φ > 2·KE',
+    commonTrap: 'Assuming kinetic energy is directly proportional to frequency passing through origin (KE ∝ ν).',
     difficulty: 'hard',
     isImportant: true,
     isTricky: true,
@@ -176,14 +196,16 @@ export const SEED_QUESTION_BANK: Question[] = [
     estimatedTimeSeconds: 75,
     negativeMarking: -1,
     solutionAvailable: true,
-    videoSolutionAvailable: false,
-    verificationStatus: 'VERIFIED'
+    videoSolutionAvailable: false
   },
 
   // ==================== CHEMISTRY ====================
   {
     id: 'q-chem-001',
     sourceType: 'RABBIT_PRACTICE',
+    verificationStatus: 'VERIFIED',
+    sourceName: 'Rabbit Academic Team',
+    sourceReference: 'Diagnostic Practice Bank V1 — Chemistry Physical',
     subject: 'chemistry',
     classLevel: '11',
     chapterId: 'chem-11-01',
@@ -201,6 +223,7 @@ export const SEED_QUESTION_BANK: Question[] = [
     conceptTested: 'Valence electron calculation in polyatomic ions using mole concept',
     whyCorrect: '0.1 moles contains 0.1 NA ions; each ion carries 16 valence electrons, yielding 1.6 NA.',
     formulaUsed: 'Moles = mass / molar mass; Valence electrons = Moles × NA × electrons_per_ion',
+    commonTrap: 'Forgetting to add the extra electron from the -1 charge, or confusing valence electrons with total electrons.',
     difficulty: 'medium',
     isImportant: true,
     isTricky: true,
@@ -208,12 +231,14 @@ export const SEED_QUESTION_BANK: Question[] = [
     estimatedTimeSeconds: 60,
     negativeMarking: -1,
     solutionAvailable: true,
-    videoSolutionAvailable: false,
-    verificationStatus: 'VERIFIED'
+    videoSolutionAvailable: false
   },
   {
     id: 'q-chem-002',
     sourceType: 'RABBIT_PRACTICE',
+    verificationStatus: 'VERIFIED',
+    sourceName: 'Rabbit Academic Team',
+    sourceReference: 'Diagnostic Practice Bank V1 — Chemistry Inorganic',
     subject: 'chemistry',
     classLevel: '11',
     chapterId: 'chem-11-04',
@@ -231,6 +256,7 @@ export const SEED_QUESTION_BANK: Question[] = [
     conceptTested: 'Equatorial preference of lone pairs in trigonal bipyramidal geometry',
     whyCorrect: 'With 3 bond pairs and 2 lone pairs in steric number 5, the molecular shape is bent T-shaped.',
     formulaUsed: 'Steric Number = 1/2 [V + M - C + A] = 1/2 [7 + 3 - 0 + 0] = 5',
+    commonTrap: 'Confusing electron geometry (trigonal bipyramidal) with molecular shape (T-shaped).',
     difficulty: 'medium',
     isImportant: true,
     isTricky: false,
@@ -238,12 +264,14 @@ export const SEED_QUESTION_BANK: Question[] = [
     estimatedTimeSeconds: 45,
     negativeMarking: -1,
     solutionAvailable: true,
-    videoSolutionAvailable: false,
-    verificationStatus: 'VERIFIED'
+    videoSolutionAvailable: false
   },
   {
     id: 'q-chem-003',
     sourceType: 'RABBIT_PRACTICE',
+    verificationStatus: 'VERIFIED',
+    sourceName: 'Rabbit Academic Team',
+    sourceReference: 'Diagnostic Practice Bank V1 — Chemistry Coordination',
     subject: 'chemistry',
     classLevel: '12',
     chapterId: 'chem-12-05',
@@ -261,6 +289,7 @@ export const SEED_QUESTION_BANK: Question[] = [
     conceptTested: 'Crystal field splitting and strong vs weak field ligands in d6 octahedral complexes',
     whyCorrect: 'Strong field CN- forces pairing of all 6 d-electrons in Fe2+, giving n = 0 unpaired electrons.',
     formulaUsed: 'μ = sqrt(n(n+2)) BM; n=0 -> μ=0',
+    commonTrap: 'Overlooking oxidation state or misidentifying CN- in the spectrochemical series.',
     difficulty: 'medium',
     isImportant: true,
     isTricky: false,
@@ -268,12 +297,14 @@ export const SEED_QUESTION_BANK: Question[] = [
     estimatedTimeSeconds: 60,
     negativeMarking: -1,
     solutionAvailable: true,
-    videoSolutionAvailable: false,
-    verificationStatus: 'VERIFIED'
+    videoSolutionAvailable: false
   },
   {
     id: 'q-chem-004',
     sourceType: 'RABBIT_PRACTICE',
+    verificationStatus: 'VERIFIED',
+    sourceName: 'Rabbit Academic Team',
+    sourceReference: 'Diagnostic Practice Bank V1 — Chemistry Organic',
     subject: 'chemistry',
     classLevel: '12',
     chapterId: 'chem-12-08',
@@ -297,6 +328,7 @@ export const SEED_QUESTION_BANK: Question[] = [
       'Benzaldehyde lacks a methyl group attached to carbonyl carbon.'
     ],
     formulaUsed: 'R-CO-CH3 + 3 I2 + 4 NaOH -> R-COONa + CHI3(yellow ppt) + 3 NaI + 3 H2O',
+    commonTrap: 'Confusing symmetrical ketones like pentan-3-one with methyl ketones like pentan-2-one.',
     difficulty: 'easy',
     isImportant: true,
     isTricky: false,
@@ -304,14 +336,16 @@ export const SEED_QUESTION_BANK: Question[] = [
     estimatedTimeSeconds: 40,
     negativeMarking: -1,
     solutionAvailable: true,
-    videoSolutionAvailable: false,
-    verificationStatus: 'VERIFIED'
+    videoSolutionAvailable: false
   },
 
   // ==================== BOTANY ====================
   {
     id: 'q-bot-001',
     sourceType: 'RABBIT_PRACTICE',
+    verificationStatus: 'VERIFIED',
+    sourceName: 'Rabbit Academic Team',
+    sourceReference: 'Diagnostic Practice Bank V1 — Botany Cytology',
     subject: 'botany',
     classLevel: '11',
     chapterId: 'bot-11-06',
@@ -328,6 +362,7 @@ export const SEED_QUESTION_BANK: Question[] = [
     explanation: 'According to NCERT Biology (Cell: The Unit of Life), the endomembrane system includes Endoplasmic reticulum, Golgi apparatus, Lysosomes, and Vacuoles because their functions are coordinated. Mitochondria, Chloroplasts, and Peroxisomes are not coordinated with these components and are therefore not considered part of the endomembrane system.',
     conceptTested: 'NCERT definition and functional coordination of the endomembrane system',
     whyCorrect: 'Peroxisomes carry distinct oxidative pathways and are excluded from the endomembrane system in NCERT.',
+    commonTrap: 'Believing all single-membrane bounded organelles belong to the endomembrane system.',
     difficulty: 'easy',
     isImportant: true,
     isTricky: false,
@@ -335,12 +370,14 @@ export const SEED_QUESTION_BANK: Question[] = [
     estimatedTimeSeconds: 30,
     negativeMarking: -1,
     solutionAvailable: true,
-    videoSolutionAvailable: false,
-    verificationStatus: 'VERIFIED'
+    videoSolutionAvailable: false
   },
   {
     id: 'q-bot-002',
     sourceType: 'RABBIT_PRACTICE',
+    verificationStatus: 'VERIFIED',
+    sourceName: 'Rabbit Academic Team',
+    sourceReference: 'Diagnostic Practice Bank V1 — Botany Physiology',
     subject: 'botany',
     classLevel: '11',
     chapterId: 'bot-11-08',
@@ -358,6 +395,7 @@ export const SEED_QUESTION_BANK: Question[] = [
     conceptTested: 'C4 dicarboxylic acid pathway compartmentalization between mesophyll and bundle sheath cells',
     whyCorrect: 'PEP is the primary acceptor in mesophyll; RuBP carboxylation occurs later in bundle sheath cells.',
     formulaUsed: 'PEP (3C) + CO2 + H2O --(PEPcase)--> OAA (4C) [in Mesophyll cells]',
+    commonTrap: 'Swapping mesophyll and bundle sheath functions or naming OAA (product) instead of PEP (acceptor).',
     difficulty: 'medium',
     isImportant: true,
     isTricky: false,
@@ -365,12 +403,14 @@ export const SEED_QUESTION_BANK: Question[] = [
     estimatedTimeSeconds: 40,
     negativeMarking: -1,
     solutionAvailable: true,
-    videoSolutionAvailable: false,
-    verificationStatus: 'VERIFIED'
+    videoSolutionAvailable: false
   },
   {
     id: 'q-bot-003',
     sourceType: 'RABBIT_PRACTICE',
+    verificationStatus: 'VERIFIED',
+    sourceName: 'Rabbit Academic Team',
+    sourceReference: 'Diagnostic Practice Bank V1 — Botany Reproduction',
     subject: 'botany',
     classLevel: '12',
     chapterId: 'bot-12-01',
@@ -387,6 +427,7 @@ export const SEED_QUESTION_BANK: Question[] = [
     explanation: 'A typical mature angiosperm female gametophyte (embryo sac) contains 3 antipodal cells at the chalazal end, 1 egg cell and 2 synergids (forming the egg apparatus) at the micropylar end, and 1 large central cell with 2 polar nuclei. Thus, it is 7-celled and 8-nucleate (Polygonum type).',
     conceptTested: 'Organization and development of Polygonum type embryo sac',
     whyCorrect: '3 antipodals + 3 in egg apparatus + 1 central cell = 7 cells; 3 + 3 + 2 polar nuclei = 8 nuclei.',
+    commonTrap: 'Counting the 2 polar nuclei as 2 separate cells instead of 1 binucleate central cell.',
     difficulty: 'easy',
     isImportant: true,
     isTricky: false,
@@ -394,12 +435,14 @@ export const SEED_QUESTION_BANK: Question[] = [
     estimatedTimeSeconds: 30,
     negativeMarking: -1,
     solutionAvailable: true,
-    videoSolutionAvailable: false,
-    verificationStatus: 'VERIFIED'
+    videoSolutionAvailable: false
   },
   {
     id: 'q-bot-004',
     sourceType: 'RABBIT_PRACTICE',
+    verificationStatus: 'VERIFIED',
+    sourceName: 'Rabbit Academic Team',
+    sourceReference: 'Diagnostic Practice Bank V1 — Botany Genetics',
     subject: 'botany',
     classLevel: '12',
     chapterId: 'bot-12-03',
@@ -422,6 +465,7 @@ export const SEED_QUESTION_BANK: Question[] = [
       'Splicing is the correct term.',
       'In vivo eukaryotic splicing requires snRNPs.'
     ],
+    commonTrap: 'Mixing up capping (5\' end), tailing (3\' end), and splicing (internal intron removal).',
     difficulty: 'easy',
     isImportant: true,
     isTricky: false,
@@ -429,14 +473,16 @@ export const SEED_QUESTION_BANK: Question[] = [
     estimatedTimeSeconds: 30,
     negativeMarking: -1,
     solutionAvailable: true,
-    videoSolutionAvailable: false,
-    verificationStatus: 'VERIFIED'
+    videoSolutionAvailable: false
   },
 
   // ==================== ZOOLOGY ====================
   {
     id: 'q-zoo-001',
     sourceType: 'RABBIT_PRACTICE',
+    verificationStatus: 'VERIFIED',
+    sourceName: 'Rabbit Academic Team',
+    sourceReference: 'Diagnostic Practice Bank V1 — Zoology Circulation',
     subject: 'zoology',
     classLevel: '11',
     chapterId: 'zoo-11-04',
@@ -459,6 +505,7 @@ export const SEED_QUESTION_BANK: Question[] = [
       'Ventricular repolarization is represented by the T wave.',
       'Atrial repolarization is masked inside the QRS complex.'
     ],
+    commonTrap: 'Confusing depolarization (excitation/contraction) with repolarization (recovery).',
     difficulty: 'easy',
     isImportant: true,
     isTricky: false,
@@ -466,12 +513,14 @@ export const SEED_QUESTION_BANK: Question[] = [
     estimatedTimeSeconds: 30,
     negativeMarking: -1,
     solutionAvailable: true,
-    videoSolutionAvailable: false,
-    verificationStatus: 'VERIFIED'
+    videoSolutionAvailable: false
   },
   {
     id: 'q-zoo-002',
     sourceType: 'RABBIT_PRACTICE',
+    verificationStatus: 'VERIFIED',
+    sourceName: 'Rabbit Academic Team',
+    sourceReference: 'Diagnostic Practice Bank V1 — Zoology Excretion',
     subject: 'zoology',
     classLevel: '11',
     chapterId: 'zoo-11-05',
@@ -488,6 +537,7 @@ export const SEED_QUESTION_BANK: Question[] = [
     explanation: 'The counter-current mechanism operates between Henle’s loop and vasa recta. The medullary hyperosmolarity (from 300 mOsmol/L in cortex up to 1200 mOsmol/L in inner medulla) is maintained primarily by NaCl transport out of the ascending limb of Henle’s loop and urea recycling from the collecting duct into the medullary interstitium.',
     conceptTested: 'Counter-current multiplier and exchanger solutes in renal medullary interstitium',
     whyCorrect: 'NaCl and urea are the two primary solutes cited in NCERT maintaining the medullary gradient.',
+    commonTrap: 'Selecting potassium or glucose, which are strictly reabsorbed in the proximal convoluted tubule.',
     difficulty: 'medium',
     isImportant: true,
     isTricky: false,
@@ -495,12 +545,14 @@ export const SEED_QUESTION_BANK: Question[] = [
     estimatedTimeSeconds: 45,
     negativeMarking: -1,
     solutionAvailable: true,
-    videoSolutionAvailable: false,
-    verificationStatus: 'VERIFIED'
+    videoSolutionAvailable: false
   },
   {
     id: 'q-zoo-003',
     sourceType: 'RABBIT_PRACTICE',
+    verificationStatus: 'VERIFIED',
+    sourceName: 'Rabbit Academic Team',
+    sourceReference: 'Diagnostic Practice Bank V1 — Zoology Reproduction',
     subject: 'zoology',
     classLevel: '12',
     chapterId: 'zoo-12-01',
@@ -517,6 +569,7 @@ export const SEED_QUESTION_BANK: Question[] = [
     explanation: 'Around the middle of the cycle (about the 14th day), both LH and FSH attain a peak level. The rapid surge in LH (known as LH surge) induces rupture of the mature Graafian follicle and thereby the release of an ovum (ovulation).',
     conceptTested: 'Endocrine regulation of ovulation and the LH surge',
     whyCorrect: 'LH surge is the direct pituitary hormonal trigger for Graafian follicle rupture.',
+    commonTrap: 'Selecting estrogen (ovarian hormone causing positive feedback) instead of the actual pituitary trigger (LH surge).',
     difficulty: 'easy',
     isImportant: true,
     isTricky: false,
@@ -524,12 +577,14 @@ export const SEED_QUESTION_BANK: Question[] = [
     estimatedTimeSeconds: 30,
     negativeMarking: -1,
     solutionAvailable: true,
-    videoSolutionAvailable: false,
-    verificationStatus: 'VERIFIED'
+    videoSolutionAvailable: false
   },
   {
     id: 'q-zoo-004',
     sourceType: 'RABBIT_PRACTICE',
+    verificationStatus: 'VERIFIED',
+    sourceName: 'Rabbit Academic Team',
+    sourceReference: 'Diagnostic Practice Bank V1 — Zoology Biotech',
     subject: 'zoology',
     classLevel: '12',
     chapterId: 'zoo-12-05',
@@ -546,6 +601,7 @@ export const SEED_QUESTION_BANK: Question[] = [
     explanation: 'The BamHI recognition site is located within the tetR gene of pBR322. Insertion of a foreign DNA sequence disrupts the tetR reading frame (insertional inactivation), causing loss of tetracycline resistance. The ampR gene remains intact, so the recombinant bacteria grow on ampicillin plates but die on tetracycline plates.',
     conceptTested: 'Insertional inactivation of selectable markers in cloning vectors',
     whyCorrect: 'Ligation at BamHI inactivates tetR while preserving ampR function.',
+    commonTrap: 'Mixing up restriction sites between ampR (PstI, PvuI) and tetR (BamHI, SalI).',
     difficulty: 'medium',
     isImportant: true,
     isTricky: true,
@@ -553,7 +609,6 @@ export const SEED_QUESTION_BANK: Question[] = [
     estimatedTimeSeconds: 60,
     negativeMarking: -1,
     solutionAvailable: true,
-    videoSolutionAvailable: false,
-    verificationStatus: 'VERIFIED'
+    videoSolutionAvailable: false
   }
 ];

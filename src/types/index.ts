@@ -21,7 +21,7 @@ export type QuestionSourceType =
   | 'RABBIT_PRACTICE'
   | 'USER_CREATED';
 
-export type VerificationStatus = 'VERIFIED' | 'UNVERIFIED' | 'COMMUNITY_FLAGGED';
+export type VerificationStatus = 'VERIFIED' | 'UNVERIFIED' | 'PENDING_REVIEW' | 'COMMUNITY_FLAGGED';
 
 export type MistakeCategory =
   | 'Concept mistake'
@@ -62,7 +62,14 @@ export interface VideoSolution {
 export interface Question {
   id: string;
   sourceType: QuestionSourceType;
+  verificationStatus: VerificationStatus;
+  sourceName?: string; // e.g. "NTA NEET UG Official Question Paper" or "Rabbit Academic Team"
+  sourceUrl?: string; // Official portal link or public release document
+  sourceReference?: string; // e.g. "NEET 2023 Code E3 Q.42"
+  examName?: string; // e.g. "NEET UG", "AIPMT", "NEET Re-Exam"
   year?: number; // Authentic NEET exam year (e.g., 2023, 2022)
+  paperSession?: string; // e.g. "Phase 1", "Phase 2", "Code G4"
+  questionNumber?: number; // Question number in original official question booklet
   subject: SubjectId;
   classLevel: ClassLevel;
   chapterId: string;
@@ -77,6 +84,7 @@ export interface Question {
   whyCorrect?: string;
   whyOptionsIncorrect?: string[];
   formulaUsed?: string;
+  commonTrap?: string; // Concept trap, formula trap, unit trap, NCERT trap
   difficulty: DifficultyLevel;
   isImportant: boolean;
   isTricky: boolean;
@@ -86,7 +94,6 @@ export interface Question {
   solutionAvailable: boolean;
   videoSolutionAvailable: boolean;
   videoSolution?: VideoSolution;
-  verificationStatus: VerificationStatus;
 }
 
 export interface QuestionAttempt {

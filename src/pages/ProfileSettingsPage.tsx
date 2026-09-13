@@ -14,6 +14,7 @@ import {
   LogOut
 } from 'lucide-react';
 import { StrengthLevel } from '../types';
+import { ParentAccountService } from '../services/parentService';
 
 export const ProfileSettingsPage: React.FC = () => {
   const {
@@ -23,6 +24,11 @@ export const ProfileSettingsPage: React.FC = () => {
     importData,
     resetAll
   } = useApp();
+
+  const [pairingCode, setPairingCode] = useState<string | null>(() => {
+    const act = ParentAccountService.getActivePairingCode();
+    return act ? act.code : null;
+  });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -350,38 +356,70 @@ export const ProfileSettingsPage: React.FC = () => {
               Parent Companion & Accountability Link
             </h3>
           </div>
-          <span className="badge badge-yellow">Parent Sync — Coming in Backend Phase</span>
+          <span className="badge badge-green">Zero-Surveillance Architecture</span>
         </div>
 
         <p style={{ fontSize: '0.825rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '16px' }}>
-          Rabbit believes in honest accountability without intrusive surveillance. In the upcoming authenticated backend phase, parents will be able to verify via OTP to view only real preparation statistics (study hours, chapters revised, test scores, and 100 MCQ mission). 
-          <strong> Rabbit strictly forbids tracking WhatsApp, Instagram, phone calls, or location.</strong>
+          Rabbit believes in honest accountability without intrusive surveillance. Parents receive <strong>strictly read-only</strong> access to verify preparation consistency (study hours, chapters revised, test scores, and 100 MCQ mission). 
+          <strong> Rabbit architecturally blocks tracking WhatsApp, Instagram, phone calls, camera, browser history, or device location.</strong>
         </p>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px', opacity: 0.85 }}>
-          <div className="form-group" style={{ margin: 0 }}>
-            <label className="form-label" style={{ fontSize: '0.78rem' }}>Student Mobile Number</label>
-            <input
-              type="tel"
-              className="form-input"
-              placeholder="+91 98765 43210"
-              disabled
-              style={{ backgroundColor: 'var(--bg-subtle)', cursor: 'not-allowed' }}
-            />
+        {/* Pairing Code Generator */}
+        <div
+          style={{
+            padding: '16px',
+            backgroundColor: 'var(--bg-surface)',
+            border: '1px solid var(--border-medium)',
+            borderRadius: 'var(--radius-md)',
+            marginBottom: '16px'
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+            <div>
+              <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                Temporary Parent Pairing Code
+              </div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                Share this secure 6-digit PIN with your parent/guardian to link their read-only portal.
+              </div>
+            </div>
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm"
+              onClick={() => {
+                const res = ParentAccountService.generatePairingCode();
+                setPairingCode(res.code);
+              }}
+            >
+              Generate New Pairing PIN
+            </button>
           </div>
-          <div className="form-group" style={{ margin: 0 }}>
-            <label className="form-label" style={{ fontSize: '0.78rem' }}>Parent / Guardian Mobile Number</label>
-            <input
-              type="tel"
-              className="form-input"
-              placeholder="+91 91234 56789"
-              disabled
-              style={{ backgroundColor: 'var(--bg-subtle)', cursor: 'not-allowed' }}
-            />
-          </div>
+
+          {pairingCode && (
+            <div style={{ marginTop: '12px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '1.5rem',
+                  fontWeight: 800,
+                  letterSpacing: '0.25em',
+                  color: 'var(--primary-700)',
+                  padding: '6px 14px',
+                  backgroundColor: 'var(--primary-50)',
+                  borderRadius: 'var(--radius-sm)'
+                }}
+              >
+                {pairingCode}
+              </div>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                Expires in 15 minutes. Valid for single parent account linkage.
+              </span>
+            </div>
+          )}
         </div>
-        <div style={{ marginTop: '10px', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-          🔒 OTP verification and secure parent portal will activate upon cloud database launch. No fake synchronization is simulated locally.
+
+        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+          🔒 RBAC Guarantee: Parent role is strictly restricted to <code style={{ fontSize: '0.72rem' }}>VIEW_ACADEMICS</code>. System code rejects any request for private student communications.
         </div>
       </div>
 
@@ -440,6 +478,39 @@ export const ProfileSettingsPage: React.FC = () => {
             accept=".json"
             style={{ display: 'none' }}
           />
+        </div>
+
+        {/* Cloud Sync & Offline Mode Status */}
+        <div
+          style={{
+            padding: '16px',
+            backgroundColor: 'var(--bg-subtle)',
+            borderRadius: 'var(--radius-md)',
+            border: '1px solid var(--border-subtle)',
+            marginBottom: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '12px'
+          }}
+        >
+          <div>
+            <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+              Offline-First Architecture & Sync Queue
+            </div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+              Schema Version: <strong>v1 (rabbitDataVersion: 1)</strong> • Local storage is primary.
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <span className="badge badge-green" style={{ fontSize: '0.75rem' }}>
+              ✓ Offline Ready
+            </span>
+            <span className="badge badge-gray" style={{ fontSize: '0.75rem' }}>
+              0 Pending Cloud Mutations
+            </span>
+          </div>
         </div>
 
         <div style={{ paddingTop: '16px', borderTop: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

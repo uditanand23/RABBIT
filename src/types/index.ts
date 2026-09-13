@@ -85,6 +85,8 @@ export interface Question {
   whyOptionsIncorrect?: string[];
   formulaUsed?: string;
   commonTrap?: string; // Concept trap, formula trap, unit trap, NCERT trap
+  copyrightStatus?: 'PUBLIC_DOMAIN' | 'PROPRIETARY' | 'LICENSED' | 'FAIR_DEALING_EDUCATIONAL';
+  licenseStatus?: string; // e.g. "Public NEET Examination Paper (NTA Official Release)"
   difficulty: DifficultyLevel;
   isImportant: boolean;
   isTricky: boolean;
@@ -93,6 +95,8 @@ export interface Question {
   negativeMarking: number; // default -1
   solutionAvailable: boolean;
   videoSolutionAvailable: boolean;
+  videoSolutionUrl?: string;
+  videoVerificationStatus?: VerificationStatus;
   videoSolution?: VideoSolution;
 }
 
@@ -368,6 +372,7 @@ export interface MockTestRecord {
 
 export interface UserBackupData {
   version: string;
+  schemaVersion?: number; // rabbitDataVersion: 1
   exportDate: string;
   profile: StudentProfile | null;
   chapters: Chapter[];
@@ -381,4 +386,87 @@ export interface UserBackupData {
   mistakes?: MistakeEntry[];
   testResults?: TestResult[];
   achievements?: Achievement[];
+}
+
+// ================= BACKEND, RBAC & CLOUD SYNC ARCHITECTURE =================
+
+export type UserRole = 'STUDENT' | 'PARENT' | 'EDUCATOR' | 'ADMIN';
+
+export interface UserAccount {
+  id: string;
+  role: UserRole;
+  phoneNumber?: string;
+  email?: string;
+  fullName: string;
+  createdAt: string;
+  lastLoginAt: string;
+  isActive: boolean;
+}
+
+export type LinkStatus = 'PENDING_APPROVAL' | 'ACTIVE' | 'REVOKED';
+
+export interface StudentParentLink {
+  id: string;
+  studentId: string;
+  parentId: string;
+  parentName: string;
+  parentPhone: string;
+  status: LinkStatus;
+  requestedAt: string;
+  approvedAt?: string;
+  revokedAt?: string;
+  // Strictly READ-ONLY permissions for academic transparency:
+  permissions: {
+    canViewStudyHours: true;
+    canViewMcqAccuracy: true;
+    canViewMockScores: true;
+    canViewChapterProgress: true;
+    canViewWeeklySummary: true;
+    canViewMistakeTrends: true;
+    // Explicit architectural boundaries:
+    canViewPrivateChats: false;
+    canViewBrowserHistory: false;
+    canTrackDeviceLocation: false;
+    canModifyStudentData: false;
+  };
+}
+
+export type SyncStatus = 'PENDING' | 'SYNCED' | 'CONFLICT' | 'FAILED';
+
+export interface SyncEntityRecord {
+  entityType: 'STUDY_LOG' | 'MCQ_RECORD' | 'CHAPTER_PROGRESS' | 'MISTAKE' | 'TEST_RESULT' | 'PLANNER';
+  localId: string;
+  serverId?: string;
+  clientTimestamp: number;
+  serverTimestamp?: number;
+  syncStatus: SyncStatus;
+  payload: unknown;
+  conflictResolutionStrategy: 'CLIENT_WINS' | 'SERVER_WINS' | 'MAX_TIMESTAMP';
+}
+
+export interface IngestPyqBatchResult {
+  total: number;
+  valid: number;
+  invalid: number;
+  warnings: number;
+  duplicates: number;
+  missingSources: number;
+  rejectedQuestions: Array<{
+    id?: string;
+    questionTextSnippet: string;
+    reason: string;
+  }>;
+  acceptedQuestions: Question[];
+}
+
+export interface AppNotification {
+  id: string;
+  userId: string;
+  recipientRole: 'STUDENT' | 'PARENT';
+  title: string;
+  body: string;
+  category: 'REVISION_DUE' | 'MILESTONE' | 'STUDY_REMINDER' | 'WEEKLY_REPORT' | 'SECURITY';
+  createdAt: string;
+  read: boolean;
+  actionUrl?: string;
 }

@@ -17,6 +17,7 @@ import {
   MistakeCategory
 } from '../types';
 import { StorageService, getTodayDateString } from '../services/storage';
+import { CloudSyncService } from '../services/cloudSync';
 
 interface AppContextType {
   profile: StudentProfile | null;
@@ -453,6 +454,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       document.documentElement.classList.remove('dark');
     }
   }, [profile?.theme]);
+
+  // Check and run data migrations safely
+  useEffect(() => {
+    CloudSyncService.checkAndRunMigrations();
+  }, []);
 
   return (
     <AppContext.Provider

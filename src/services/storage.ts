@@ -715,6 +715,7 @@ export const StorageService = {
   exportAllData(): UserBackupData {
     return {
       version: '2.0.0',
+      schemaVersion: 1,
       exportDate: new Date().toISOString(),
       profile: this.getProfile(),
       chapters: this.getChapters(),
@@ -734,6 +735,12 @@ export const StorageService = {
   importAllData(data: UserBackupData): boolean {
     try {
       if (!data || typeof data !== 'object') return false;
+      // Schema version check and forward migration
+      const ver = data.schemaVersion || 0;
+      if (ver > 1) {
+        console.warn(`Backup is from a newer schema version (${ver}). Compatibility mode active.`);
+      }
+
       // Data validation to prevent corruption
       if (data.profile && typeof data.profile === 'object') {
         this.saveProfile(data.profile);
